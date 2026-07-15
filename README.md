@@ -4,6 +4,11 @@ Connect [Grok Build](https://grok.x.ai/) to a running [Blender](https://www.blen
 
 Installing this plugin registers the MCP automatically and ships a skill with bpy/scene best practices so the agent uses the tools safely.
 
+> **Disclaimer — version tracking**  
+> This plugin does **not** pin a fixed Blender MCP package version. At runtime it launches the server with `uvx` from Blender Lab’s git repository (`lab/blender_mcp`, package under `mcp/`), so the MCP process tracks whatever is current on that repo. In practice that is intended to **follow / match the MCPB (and related) releases** published by Blender Lab at:  
+> **[https://projects.blender.org/lab/blender_mcp/releases](https://projects.blender.org/lab/blender_mcp/releases)**  
+> After a Lab release, the next cold start of the server may pull a newer revision (uv cache). Keep your **Blender MCP add-on** in sync with Lab’s published add-on for that release so client and server stay compatible. This Grok plugin wrapper’s own version (see `.grok-plugin/plugin.json`) is independent of those MCPB numbers.
+
 ## What you get
 
 | Component | Purpose |
@@ -92,7 +97,7 @@ Leave Blender open with the add-on enabled while you use Grok. The MCP process t
 |-----------|---------|
 | Blender | **5.1.2** |
 | MCP add-on (Blender Lab) | **1.0.0** |
-| Grok plugin MCP | `uvx` from [lab/blender_mcp](https://projects.blender.org/lab/blender_mcp) (`mcp/` package) |
+| Grok plugin MCP | `uvx` from [lab/blender_mcp](https://projects.blender.org/lab/blender_mcp) (`mcp/` package; unpinned — see disclaimer / [releases](https://projects.blender.org/lab/blender_mcp/releases)) |
 
 ---
 
@@ -172,7 +177,7 @@ Prefer high-level MCP tools (summaries, docs search, screenshots) before free-fo
 }
 ```
 
-This matches the official package entrypoint (`blender-mcp`) without hard-coding machine-local paths.
+This matches the official package entrypoint (`blender-mcp`) without hard-coding machine-local paths. There is **no git ref / version pin** in `args`: the resolved package tracks Lab’s default branch and is intended to align with [published releases](https://projects.blender.org/lab/blender_mcp/releases) (MCPB and related artifacts).
 
 > **Note:** There is an unrelated PyPI project also named `blender-mcp`. This plugin intentionally installs **only** from Blender Lab’s git repository.
 

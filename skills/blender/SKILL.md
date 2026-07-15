@@ -20,6 +20,7 @@ This plugin wires Grok Build to the [Blender Lab MCP server](https://www.blender
    - **Drag and Drop into Blender twice**: first registers the Blender Lab repository, second installs the add-on (or use download + Install from Disk).
    - Confirm in **Edit → Preferences → Add-ons → MCP** (enabled; default Host `localhost`, Port `9876`).
    - Validated with **Blender 5.1.2** + MCP add-on **1.0.0**.
+   - The stdio server is **unpinned**: it tracks Blender Lab’s git package and is meant to match MCPB releases at [lab/blender_mcp/releases](https://projects.blender.org/lab/blender_mcp/releases). Prefer a matching add-on version from Lab when tools misbehave after an update.
 
 If Blender is closed or the add-on is disabled, tools will fail. Do not invent scene state.
 

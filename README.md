@@ -23,11 +23,11 @@
 [![uv](https://img.shields.io/badge/runtime-uv_·_uvx-DE5FE9?style=for-the-badge)](https://docs.astral.sh/uv/)
 
 <p>
-  <a href="https://grok.x.ai/"><img src="assets/grok-mark.svg" alt="Grok Build" height="64" /></a>
-  &nbsp;&nbsp;
-  <a href="https://www.blender.org/"><img src="assets/blender-logo.svg" alt="Blender" height="64" /></a>
-  &nbsp;&nbsp;
-  <a href="https://modelcontextprotocol.io/"><img src="assets/mcp-mark.svg" alt="Model Context Protocol" height="64" /></a>
+  <a href="https://grok.x.ai/"><img src="assets/grok-logo.svg" alt="Grok" height="48" /></a>
+  &nbsp;&nbsp;&nbsp;
+  <a href="https://www.blender.org/"><img src="assets/blender-logo.svg" alt="Blender" height="56" /></a>
+  &nbsp;&nbsp;&nbsp;
+  <a href="https://modelcontextprotocol.io/"><img src="assets/mcp-mark.svg" alt="Model Context Protocol" height="56" /></a>
 </p>
 
 **One install** wires Grok Build to Blender Lab’s `blender-mcp` server + a production skill for safe `bpy` workflows.
@@ -319,7 +319,7 @@ grok-build-blender-plugin/
 | This repository (plugin wrapper, skill, docs, assets) | [MIT](./LICENSE) |
 | Upstream MCP server [`lab/blender_mcp`](https://projects.blender.org/lab/blender_mcp) | GPL-3.0-or-later (runtime via `uvx`, not vendored) |
 | Blender logo | © Blender Foundation — used to refer to Blender; [blender.org](https://www.blender.org/) |
-| Grok / xAI | Product names of xAI — not affiliated; [grok.x.ai](https://grok.x.ai/) |
+| Grok / xAI | Product names of xAI — not affiliated; [grok.x.ai](https://grok.x.ai/). Wordmark adapted from [worldvectorlogo / Grok](https://worldvectorlogo.com/logo/grok-3) for identification only. |
 
 **Built for** [Grok Build](https://grok.x.ai/) · **Powered by** [Blender Lab MCP](https://www.blender.org/lab/mcp-server/) · **Protocol** [MCP](https://modelcontextprotocol.io/)
 

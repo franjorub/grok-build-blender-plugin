@@ -15,11 +15,13 @@ This plugin wires Grok Build to the [Blender Lab MCP server](https://www.blender
 
 1. **[uv](https://docs.astral.sh/uv/)** on `PATH` (the MCP launches with `uvx`).
 2. **Python ≥ 3.10** (pulled in by `uvx` as needed).
-3. **Blender** running with the Lab **MCP add-on** installed and enabled:
-   - Add the Lab extensions repo: `https://lab.blender.org/`
-   - Install/enable the MCP add-on, then connect it (see [Blender Lab docs](https://www.blender.org/lab/mcp-server/)).
+3. **Blender** running with the official Lab **MCP add-on** installed and enabled:
+   - Page: [blender.org/lab/mcp-server](https://www.blender.org/lab/mcp-server/) → **Add-on** section.
+   - **Drag and Drop into Blender twice**: first registers the Blender Lab repository, second installs the add-on (or use download + Install from Disk).
+   - Confirm in **Edit → Preferences → Add-ons → MCP** (enabled; default Host `localhost`, Port `9876`).
+   - Validated with **Blender 5.1.2** + MCP add-on **1.0.0**.
 
-If Blender is closed or the add-on is disconnected, tools will fail. Do not invent scene state.
+If Blender is closed or the add-on is disabled, tools will fail. Do not invent scene state.
 
 ## How to work with the tools
 
@@ -49,7 +51,7 @@ Use the MCP’s API/manual search tools when unsure about operator signatures, R
 |---------|----------------|
 | MCP fails to start | `uv`/`uvx` on PATH; first run downloads the git package (slow) |
 | Startup timeout | Raise cold-start allowance: `export GROK_MCP_STARTUP_TIMEOUT_SECS=60` or `MCP_TIMEOUT` (ms) |
-| Tools error / connection | Blender open? Add-on enabled and connected? |
+| Tools error / connection | Blender open? MCP add-on checked under Preferences → Add-ons? Drag-and-drop done twice from the Lab page? |
 | Server stderr | `~/.grok/logs/mcp/blender.stderr.log` |
 
 ## Scope

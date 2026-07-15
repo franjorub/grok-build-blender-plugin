@@ -11,20 +11,11 @@ Installing this plugin registers the MCP automatically and ships a skill with bp
 | **MCP server `blender`** | stdio server from [lab/blender_mcp](https://projects.blender.org/lab/blender_mcp) (inspect scenes, run `bpy`, search API/manual, screenshots, renders) |
 | **Skill `blender`** | When/how to use the tools, connection prerequisites, bpy safety rules |
 
-## Prerequisites
+---
 
-1. **[uv](https://docs.astral.sh/uv/)** installed and on your `PATH` (the plugin launches the server with `uvx`).
-2. **Python ≥ 3.10** (satisfied by `uv` as needed).
-3. **Blender** with the Lab **MCP add-on** installed, enabled, and connected:
-   - Add the Lab extensions repository: `https://lab.blender.org/`
-   - Install and enable the MCP add-on  
-   - Details: [Blender Lab — MCP Server](https://www.blender.org/lab/mcp-server/)
+## 1. Install the Grok Build plugin
 
-The MCP process talks to Blender over the add-on bridge. **Blender must be running** for tools to work.
-
-## Install
-
-### From GitHub
+### From GitHub (recommended)
 
 ```bash
 grok plugin install franjorub/grok-build-blender-plugin --trust
@@ -39,7 +30,7 @@ grok plugin install ./grok-build-blender-plugin --trust
 
 ### Enable the plugin
 
-Plugins are not always active until listed under `[plugins].enabled` in `~/.grok/config.toml`:
+List the plugin under `[plugins].enabled` in `~/.grok/config.toml`:
 
 ```toml
 [plugins]
@@ -51,16 +42,59 @@ enabled = [
 
 Reload plugins in the TUI (`/plugins` → `r`) or start a new Grok session.
 
-### Verify
+### Verify the plugin
 
 ```bash
 grok plugin details blender
-grok mcp list
-# optional connectivity check (Blender + add-on should be up):
 grok mcp doctor blender
 ```
 
 In a session, open `/mcps` and confirm **blender** is listed and trusted.
+
+You also need **[uv](https://docs.astral.sh/uv/)** on your `PATH` (the plugin launches the server with `uvx`) and **Python ≥ 3.10** (satisfied by `uv` as needed).
+
+---
+
+## 2. Install the official Blender MCP add-on
+
+This Grok plugin only starts the **MCP server process**. To talk to a live Blender session you must install Blender Lab’s **MCP add-on** inside Blender.
+
+Official page (Add-on section): **[https://www.blender.org/lab/mcp-server/](https://www.blender.org/lab/mcp-server/)**
+
+### Drag and drop (recommended)
+
+1. Open [blender.org/lab/mcp-server](https://www.blender.org/lab/mcp-server/) and find the **Add-on** section.
+2. Use **Drag and Drop into Blender** and drop it onto a running Blender window.
+3. **You must do the drag-and-drop twice:**
+   - **First drop** — registers the **Blender Lab** extensions repository (source).
+   - **Second drop** — installs the **MCP add-on** itself.
+4. Doing it this way also lets Blender notify you when a new version of the add-on is available.
+
+Alternatively, use **download** and then **Install from Disk** in Blender’s extensions UI (same page links both).
+
+### Enable and confirm it is running
+
+1. In Blender: **Edit → Preferences → Add-ons**.
+2. Search for **MCP** (or open the add-on list and expand **MCP**).
+3. Ensure the checkbox is **enabled**.
+4. You should see something like:
+   - Description: *MCP server add-on for LLM interaction.*
+   - Maintainer: **Blender Lab**
+   - Version: **1.0.0** (or newer)
+   - **Preferences → Host:** `localhost`
+   - **Preferences → Port:** `9876` (default)
+
+Leave Blender open with the add-on enabled while you use Grok. The MCP process talks to Blender over this bridge; if Blender is closed or the add-on is disabled, tools will fail.
+
+### Tested with
+
+| Component | Version |
+|-----------|---------|
+| Blender | **5.1.2** |
+| MCP add-on (Blender Lab) | **1.0.0** |
+| Grok plugin MCP | `uvx` from [lab/blender_mcp](https://projects.blender.org/lab/blender_mcp) (`mcp/` package) |
+
+---
 
 ## Migrating from a manual `config.toml` entry
 
@@ -77,6 +111,8 @@ enabled = true
 
 You can keep any local `mcp-bundles` checkout as a backup; the plugin does not use it.
 
+---
+
 ## First-run notes
 
 - The first launch runs  
@@ -92,9 +128,11 @@ You can keep any local `mcp-bundles` checkout as a backup; the plugin does not u
 
 - Stderr from the process is written to `~/.grok/logs/mcp/blender.stderr.log`.
 
+---
+
 ## Usage
 
-With Blender open and the MCP add-on connected, ask Grok naturally, for example:
+With Blender open and the MCP add-on enabled, ask Grok naturally, for example:
 
 - “List the objects in the current Blender scene.”
 - “Rename datablocks that look mistyped.”
@@ -103,6 +141,8 @@ With Blender open and the MCP add-on connected, ask Grok naturally, for example:
 
 Prefer high-level MCP tools (summaries, docs search, screenshots) before free-form `execute_blender_code`.
 
+---
+
 ## Troubleshooting
 
 | Problem | What to try |
@@ -110,8 +150,10 @@ Prefer high-level MCP tools (summaries, docs search, screenshots) before free-fo
 | Plugin installed but no MCP | Ensure `"blender"` is in `[plugins].enabled`; reload plugins; remove a manual `[mcp_servers.blender]` if present |
 | `uvx` / command not found | Install [uv](https://docs.astral.sh/uv/) |
 | Startup timeout | `GROK_MCP_STARTUP_TIMEOUT_SECS=60` (see above); wait for first download to finish |
-| Tools fail while server runs | Open Blender; enable/connect the Lab MCP add-on |
+| Tools fail while server runs | Blender open? MCP add-on checked in **Edit → Preferences → Add-ons**? Host/port `localhost` / `9876`? Did you drag-and-drop **twice** on the Lab page? |
 | Logs | `tail -f ~/.grok/logs/mcp/blender.stderr.log` |
+
+---
 
 ## How the MCP is launched
 
@@ -133,6 +175,8 @@ Prefer high-level MCP tools (summaries, docs search, screenshots) before free-fo
 This matches the official package entrypoint (`blender-mcp`) without hard-coding machine-local paths.
 
 > **Note:** There is an unrelated PyPI project also named `blender-mcp`. This plugin intentionally installs **only** from Blender Lab’s git repository.
+
+---
 
 ## License
 

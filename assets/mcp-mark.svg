@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Model Context Protocol">
+  <rect width="128" height="128" rx="28" fill="#111827"/>
+  <path d="M32 78V50l32-18 32 18v28l-32 18-32-18z" fill="none" stroke="#38BDF8" stroke-width="5" stroke-linejoin="round"/>
+  <path d="M64 32v64M32 50l32 18 32-18M32 78l32 18 32-18" fill="none" stroke="#7DD3FC" stroke-width="3" opacity="0.9"/>
+  <circle cx="64" cy="64" r="7" fill="#F0F9FF"/>
+</svg>

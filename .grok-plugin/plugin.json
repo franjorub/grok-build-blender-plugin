@@ -11,9 +11,17 @@
   "license": "MIT",
   "keywords": [
     "blender",
+    "blender-mcp",
+    "blender-lab",
     "mcp",
+    "mcpb",
+    "model-context-protocol",
     "3d",
     "bpy",
-    "grok-build"
+    "grok",
+    "grok-build",
+    "xai",
+    "llm",
+    "ai-3d"
   ]
 }

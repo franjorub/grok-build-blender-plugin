@@ -1,111 +1,230 @@
-# Blender plugin for Grok Build
+<!--
+  SEO / discoverability
+  Title: Grok Build Blender Plugin | Official Blender Lab MCP for Grok
+  Keywords: grok build, grok plugin, blender mcp, blender lab, mcpb, bpy,
+            model context protocol, blender 5, 3d ai, uvx blender-mcp,
+            grok-build-blender-plugin, xai grok blender
+  Topics: blender, mcp, grok, grok-build, bpy, 3d, llm, blender-lab, mcpb
+-->
 
-Connect [Grok Build](https://grok.x.ai/) to a running [Blender](https://www.blender.org/) instance through the official **Blender Lab MCP server**.
+<div align="center">
 
-Installing this plugin registers the MCP automatically and ships a skill with bpy/scene best practices so the agent uses the tools safely.
+<img src="assets/banner.svg" alt="Grok Build × Blender Lab MCP — control Blender from Grok via Model Context Protocol" width="100%" />
 
-> **Version policy (plugin version = MCPB version)**  
-> The version of **this Grok plugin** (see `.grok-plugin/plugin.json`, currently **1.0.0**) is meant to **match the Blender Lab MCPB / `blender_mcp` release of the same number**.  
-> Example: plugin **1.0.0** installs the MCP server from Lab’s git tag **`v1.0.0`** (package under `mcp/`), aligned with  
-> **[https://projects.blender.org/lab/blender_mcp/releases](https://projects.blender.org/lab/blender_mcp/releases)**  
-> and with MCP add-on **1.0.0** in Blender.  
-> When Lab publishes a new release (e.g. 1.1.0), this repo should bump to that version and pin `uvx` to the corresponding tag. Until then, installs stay on the pinned release and do **not** silently track `main`.
+# Grok Build × Blender MCP Plugin
 
-## What you get
+### Control a **live Blender** session from **[Grok Build](https://grok.x.ai/)** using the official **[Blender Lab MCP](https://www.blender.org/lab/mcp-server/)** server
 
-| Component | Purpose |
-|-----------|---------|
-| **MCP server `blender`** | stdio server from [lab/blender_mcp](https://projects.blender.org/lab/blender_mcp) (inspect scenes, run `bpy`, search API/manual, screenshots, renders) |
-| **Skill `blender`** | When/how to use the tools, connection prerequisites, bpy safety rules |
+[![Plugin version](https://img.shields.io/badge/plugin-v1.0.0-111827?style=for-the-badge&labelColor=0a0a0a)](https://github.com/franjorub/grok-build-blender-plugin/releases)
+[![MCPB](https://img.shields.io/badge/MCPB-v1.0.0-E87D0D?style=for-the-badge&logo=blender&logoColor=white)](https://projects.blender.org/lab/blender_mcp/releases)
+[![Blender](https://img.shields.io/badge/Blender-5.1.2_tested-EA7600?style=for-the-badge&logo=blender&logoColor=white)](https://www.blender.org/)
+[![MCP](https://img.shields.io/badge/MCP-stdio-38BDF8?style=for-the-badge)](https://modelcontextprotocol.io/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-22C55E?style=for-the-badge)](./LICENSE)
+[![uv](https://img.shields.io/badge/runtime-uv_·_uvx-DE5FE9?style=for-the-badge)](https://docs.astral.sh/uv/)
+
+<p>
+  <a href="https://grok.x.ai/"><img src="assets/grok-mark.svg" alt="Grok Build" height="64" /></a>
+  &nbsp;&nbsp;
+  <a href="https://www.blender.org/"><img src="assets/blender-logo.svg" alt="Blender" height="64" /></a>
+  &nbsp;&nbsp;
+  <a href="https://modelcontextprotocol.io/"><img src="assets/mcp-mark.svg" alt="Model Context Protocol" height="64" /></a>
+</p>
+
+**One install** wires Grok Build to Blender Lab’s `blender-mcp` server + a production skill for safe `bpy` workflows.
+
+[Install](#-quick-install) · [Blender add-on](#-blender-mcp-add-on-required) · [Usage](#-usage) · [Version policy](#-version-policy) · [Troubleshooting](#-troubleshooting)
+
+</div>
 
 ---
 
-## 1. Install the Grok Build plugin
+## Why this plugin?
 
-### From GitHub (recommended)
+| | |
+|:--|:--|
+| **Native Grok plugin** | Install with `grok plugin install` — MCP + skill load together |
+| **Official Blender Lab stack** | Uses [lab/blender_mcp](https://projects.blender.org/lab/blender_mcp), not a random PyPI clone |
+| **Pinned releases** | Plugin **1.0.0** → MCPB / git tag **v1.0.0** (no silent `main` drift) |
+| **Agent-ready skill** | Scene inspect first, high-level tools before free-form code |
+| **Zero path hacks** | No machine-local `mcp-bundles` directories in config |
+
+Perfect for: **AI-assisted 3D**, **bpy automation**, **scene QA**, **docs-aware modeling**, and **LLM ↔ Blender** workflows on Grok Build.
+
+---
+
+## Features
+
+- **Scene intelligence** — object hierarchies, datablock summaries, missing files, linked libraries  
+- **Live `bpy` execution** — run Python inside the connected Blender instance  
+- **Docs in context** — search Blender Python API + user manual from the MCP  
+- **Visual feedback** — screenshots, viewport / thumbnail renders  
+- **Grok skill** — triggers, safety rules, and connection troubleshooting baked in  
+
+---
+
+## Architecture
+
+```text
+  Grok Build  ──stdio MCP──▶  blender-mcp (uvx @ v1.0.0)
+                                    │
+                               TCP bridge
+                                    ▼
+                         Blender + Lab MCP add-on
+                              (localhost:9876)
+```
+
+| Layer | What it is |
+|-------|------------|
+| **This repo** | Grok plugin wrapper (MIT) — `.mcp.json` + skill + docs |
+| **MCP server** | Official `blender-mcp` from Blender Lab (GPL-3.0-or-later, fetched by `uvx`) |
+| **Add-on** | Blender Lab extension inside Blender ([lab page](https://www.blender.org/lab/mcp-server/)) |
+
+---
+
+## Prerequisites
+
+| Requirement | Notes |
+|-------------|--------|
+| [**Grok Build**](https://grok.x.ai/) CLI | Plugin manager: `grok plugin …` |
+| [**uv**](https://docs.astral.sh/uv/) | Provides `uvx` on `PATH` |
+| **Python ≥ 3.10** | Resolved by `uv` as needed |
+| [**Blender**](https://www.blender.org/) | Tested on **5.1.2** |
+| **MCP add-on 1.0.0** | From [Blender Lab MCP Server](https://www.blender.org/lab/mcp-server/) |
+
+---
+
+## Quick install
+
+### 1) Grok Build plugin
 
 ```bash
 grok plugin install franjorub/grok-build-blender-plugin --trust
 ```
 
-### From a local clone
+<details>
+<summary><strong>Local clone</strong></summary>
 
 ```bash
 git clone https://github.com/franjorub/grok-build-blender-plugin.git
-grok plugin install ./grok-build-blender-plugin --trust
+cd grok-build-blender-plugin
+grok plugin install . --trust
 ```
 
-### Enable the plugin
+</details>
 
-List the plugin under `[plugins].enabled` in `~/.grok/config.toml`:
+### 2) Enable the plugin
+
+In `~/.grok/config.toml`:
 
 ```toml
 [plugins]
 enabled = [
   "blender",
-  # ...your other plugins
+  # …other plugins
 ]
 ```
 
-Reload plugins in the TUI (`/plugins` → `r`) or start a new Grok session.
+Reload: `/plugins` → `r`, or start a new Grok session.
 
-### Verify the plugin
+### 3) Verify
 
 ```bash
 grok plugin details blender
 grok mcp doctor blender
 ```
 
-In a session, open `/mcps` and confirm **blender** is listed and trusted.
-
-You also need **[uv](https://docs.astral.sh/uv/)** on your `PATH` (the plugin launches the server with `uvx`) and **Python ≥ 3.10** (satisfied by `uv` as needed).
+In a session, open `/mcps` and confirm **blender** is listed.
 
 ---
 
-## 2. Install the official Blender MCP add-on
+## Blender MCP add-on (required)
 
-This Grok plugin only starts the **MCP server process**. To talk to a live Blender session you must install Blender Lab’s **MCP add-on** inside Blender.
+This plugin only starts the **MCP server process**. Blender still needs Lab’s **MCP add-on**.
 
-Official page (Add-on section): **[https://www.blender.org/lab/mcp-server/](https://www.blender.org/lab/mcp-server/)**
+**Official docs:** [https://www.blender.org/lab/mcp-server/](https://www.blender.org/lab/mcp-server/) → section **Add-on**
 
-### Drag and drop (recommended)
+### Drag & drop (recommended)
 
-1. Open [blender.org/lab/mcp-server](https://www.blender.org/lab/mcp-server/) and find the **Add-on** section.
-2. Use **Drag and Drop into Blender** and drop it onto a running Blender window.
-3. **You must do the drag-and-drop twice:**
-   - **First drop** — registers the **Blender Lab** extensions repository (source).
-   - **Second drop** — installs the **MCP add-on** itself.
-4. Doing it this way also lets Blender notify you when a new version of the add-on is available.
+1. Open the Lab page above.  
+2. Use **Drag and Drop into Blender** on a running Blender window.  
+3. **Do it twice:**
+   - **1st drop** → registers the **Blender Lab** extensions repository  
+   - **2nd drop** → installs the **MCP add-on**  
+4. You get update notifications when Lab ships a new add-on version.
 
-Alternatively, use **download** and then **Install from Disk** in Blender’s extensions UI (same page links both).
+Alternatively: **download** → **Install from Disk** in Blender’s extensions UI.
 
-### Enable and confirm it is running
+### Confirm it is running
 
-1. In Blender: **Edit → Preferences → Add-ons**.
-2. Search for **MCP** (or open the add-on list and expand **MCP**).
-3. Ensure the checkbox is **enabled**.
-4. You should see something like:
-   - Description: *MCP server add-on for LLM interaction.*
-   - Maintainer: **Blender Lab**
-   - Version: **1.0.0** (or newer)
-   - **Preferences → Host:** `localhost`
-   - **Preferences → Port:** `9876` (default)
+1. **Edit → Preferences → Add-ons**  
+2. Find **MCP** (*MCP server add-on for LLM interaction*)  
+3. Enable the checkbox  
+4. Defaults:
 
-Leave Blender open with the add-on enabled while you use Grok. The MCP process talks to Blender over this bridge; if Blender is closed or the add-on is disabled, tools will fail.
+| Preference | Typical value |
+|------------|----------------|
+| Host | `localhost` |
+| Port | `9876` |
+| Maintainer | Blender Lab |
+| Version | **1.0.0** (for this plugin release) |
 
-### Tested with
+Keep Blender open with the add-on enabled while using Grok.
+
+### Validated combo
 
 | Component | Version |
 |-----------|---------|
 | Blender | **5.1.2** |
-| MCP add-on (Blender Lab) | **1.0.0** |
-| Grok plugin / MCPB | **1.0.0** — `uvx` pin `@v1.0.0` from [lab/blender_mcp](https://projects.blender.org/lab/blender_mcp/releases) |
+| MCP add-on | **1.0.0** |
+| This plugin / MCPB pin | **1.0.0** / git `@v1.0.0` |
 
 ---
 
-## Migrating from a manual `config.toml` entry
+## Version policy
 
-If you previously added something like:
+> **Plugin version = MCPB version.**  
+> **`1.0.0` of this plugin installs Lab MCPB / `blender_mcp` release `v1.0.0`.**
+
+- Releases catalog: [projects.blender.org/lab/blender_mcp/releases](https://projects.blender.org/lab/blender_mcp/releases)  
+- Launch pin (see `.mcp.json`):
+
+```text
+git+https://projects.blender.org/lab/blender_mcp.git@v1.0.0#subdirectory=mcp
+```
+
+- When Lab publishes e.g. **1.1.0**, this repo should bump to **1.1.0** and pin `@v1.1.0`.  
+- Until then, installs stay on the pinned tag — **no silent tracking of `main`**.  
+- Keep the **Blender add-on** on the matching Lab version for client/server compatibility.
+
+---
+
+## Usage
+
+With Blender open and the MCP add-on enabled, ask Grok naturally:
+
+```text
+List the objects in the current Blender scene.
+```
+
+```text
+Which objects use material X?
+```
+
+```text
+Take a viewport screenshot and describe the layout.
+```
+
+```text
+Rename datablocks that look mistyped; report what changed.
+```
+
+Prefer high-level MCP tools (summaries, docs search, screenshots) before free-form `execute_blender_code`.
+
+---
+
+## Migrating from manual `config.toml`
+
+If you previously had:
 
 ```toml
 [mcp_servers.blender]
@@ -114,51 +233,31 @@ args = ["run", "--directory", "/path/to/blender_mcp", "blender-mcp"]
 enabled = true
 ```
 
-**remove that entire block** after installing this plugin. User `config.toml` takes precedence and will hide the plugin’s MCP if both define `blender`.
+**Delete that entire block** after installing this plugin. User `config.toml` overrides the plugin MCP if both define `blender`.
 
-You can keep any local `mcp-bundles` checkout as a backup; the plugin does not use it.
+Local `mcp-bundles` folders can stay as backups; the plugin does not use them.
 
 ---
 
 ## First-run notes
 
-- The first launch runs  
-  `uvx --from 'git+https://projects.blender.org/lab/blender_mcp.git@v1.0.0#subdirectory=mcp' blender-mcp`  
-  which clones the monorepo at tag **v1.0.0** (same number as this plugin), builds the `mcp/` package, and installs dependencies. That can exceed the default MCP startup timeout.
-- If the server fails to start on first use, raise the timeout, for example:
+- First launch runs:
+
+  ```bash
+  uvx --from 'git+https://projects.blender.org/lab/blender_mcp.git@v1.0.0#subdirectory=mcp' blender-mcp
+  ```
+
+  Cloning/building can exceed the default MCP startup timeout.
+
+- Raise cold-start allowance if needed:
 
   ```bash
   export GROK_MCP_STARTUP_TIMEOUT_SECS=60
-  # or (milliseconds, Claude-compatible):
+  # or (ms, Claude-compatible):
   export MCP_TIMEOUT=60000
   ```
 
-- Stderr from the process is written to `~/.grok/logs/mcp/blender.stderr.log`.
-
----
-
-## Usage
-
-With Blender open and the MCP add-on enabled, ask Grok naturally, for example:
-
-- “List the objects in the current Blender scene.”
-- “Rename datablocks that look mistyped.”
-- “Which objects use material X?”
-- “Take a viewport screenshot and describe the layout.”
-
-Prefer high-level MCP tools (summaries, docs search, screenshots) before free-form `execute_blender_code`.
-
----
-
-## Troubleshooting
-
-| Problem | What to try |
-|---------|-------------|
-| Plugin installed but no MCP | Ensure `"blender"` is in `[plugins].enabled`; reload plugins; remove a manual `[mcp_servers.blender]` if present |
-| `uvx` / command not found | Install [uv](https://docs.astral.sh/uv/) |
-| Startup timeout | `GROK_MCP_STARTUP_TIMEOUT_SECS=60` (see above); wait for first download to finish |
-| Tools fail while server runs | Blender open? MCP add-on checked in **Edit → Preferences → Add-ons**? Host/port `localhost` / `9876`? Did you drag-and-drop **twice** on the Lab page? |
-| Logs | `tail -f ~/.grok/logs/mcp/blender.stderr.log` |
+- Server stderr: `~/.grok/logs/mcp/blender.stderr.log`
 
 ---
 
@@ -179,18 +278,61 @@ Prefer high-level MCP tools (summaries, docs search, screenshots) before free-fo
 }
 ```
 
-`@v1.0.0` is the Lab release tag that matches this plugin’s version **1.0.0** (MCPB 1.0.0). See [releases](https://projects.blender.org/lab/blender_mcp/releases).
-
-> **Note:** There is an unrelated PyPI project also named `blender-mcp`. This plugin intentionally installs **only** from Blender Lab’s git repository.
+> **Note:** An unrelated project on PyPI is also named `blender-mcp`. This plugin installs **only** from [Blender Lab’s git repository](https://projects.blender.org/lab/blender_mcp).
 
 ---
 
-## License
+## Troubleshooting
 
-- **This repository** (Grok plugin wrapper, skill, docs): [MIT](./LICENSE).
-- **Upstream MCP server** ([lab/blender_mcp](https://projects.blender.org/lab/blender_mcp)): GPL-3.0-or-later (fetched at runtime by `uvx`, not vendored here).
+| Problem | Fix |
+|---------|-----|
+| Plugin installed, no MCP | `"blender"` in `[plugins].enabled`; reload plugins; remove manual `[mcp_servers.blender]` |
+| `uvx` not found | Install [uv](https://docs.astral.sh/uv/) |
+| Startup timeout | `GROK_MCP_STARTUP_TIMEOUT_SECS=60`; wait for first download |
+| Tools fail while server is up | Blender open? **Preferences → Add-ons → MCP** enabled? `localhost:9876`? Drag-and-drop done **twice**? |
+| Logs | `tail -f ~/.grok/logs/mcp/blender.stderr.log` |
 
-## Credits
+```bash
+grok mcp doctor blender
+```
 
-- [Blender Lab MCP server](https://www.blender.org/lab/mcp-server/)
-- [Grok Build plugins](https://github.com/xai-org) — install via `grok plugin install`
+---
+
+## Project layout
+
+```text
+grok-build-blender-plugin/
+├── .grok-plugin/plugin.json   # Grok manifest (name, version 1.0.0)
+├── .mcp.json                  # stdio MCP → uvx @ v1.0.0
+├── skills/blender/SKILL.md    # Agent skill
+├── assets/                    # Logos & banner
+├── LICENSE                    # MIT (wrapper)
+└── README.md
+```
+
+---
+
+## License & credits
+
+| Piece | License / credit |
+|-------|------------------|
+| This repository (plugin wrapper, skill, docs, assets) | [MIT](./LICENSE) |
+| Upstream MCP server [`lab/blender_mcp`](https://projects.blender.org/lab/blender_mcp) | GPL-3.0-or-later (runtime via `uvx`, not vendored) |
+| Blender logo | © Blender Foundation — used to refer to Blender; [blender.org](https://www.blender.org/) |
+| Grok / xAI | Product names of xAI — not affiliated; [grok.x.ai](https://grok.x.ai/) |
+
+**Built for** [Grok Build](https://grok.x.ai/) · **Powered by** [Blender Lab MCP](https://www.blender.org/lab/mcp-server/) · **Protocol** [MCP](https://modelcontextprotocol.io/)
+
+---
+
+<div align="center">
+
+**Star ⭐ this repo** if you build 3D with Grok + Blender.
+
+[Report issues](https://github.com/franjorub/grok-build-blender-plugin/issues) · [Lab releases](https://projects.blender.org/lab/blender_mcp/releases) · [Install](#-quick-install)
+
+<br />
+
+<sub>Keywords: Grok Build plugin · Blender MCP · Blender Lab · MCPB · Model Context Protocol · bpy · Blender 5 · AI 3D · uvx blender-mcp · LLM Blender automation</sub>
+
+</div>

@@ -4,7 +4,7 @@
       "command": "uvx",
       "args": [
         "--from",
-        "git+https://projects.blender.org/lab/blender_mcp.git#subdirectory=mcp",
+        "git+https://projects.blender.org/lab/blender_mcp.git@v1.0.0#subdirectory=mcp",
         "blender-mcp"
       ]
     }

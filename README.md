@@ -4,10 +4,12 @@ Connect [Grok Build](https://grok.x.ai/) to a running [Blender](https://www.blen
 
 Installing this plugin registers the MCP automatically and ships a skill with bpy/scene best practices so the agent uses the tools safely.
 
-> **Disclaimer — version tracking**  
-> This plugin does **not** pin a fixed Blender MCP package version. At runtime it launches the server with `uvx` from Blender Lab’s git repository (`lab/blender_mcp`, package under `mcp/`), so the MCP process tracks whatever is current on that repo. In practice that is intended to **follow / match the MCPB (and related) releases** published by Blender Lab at:  
+> **Version policy (plugin version = MCPB version)**  
+> The version of **this Grok plugin** (see `.grok-plugin/plugin.json`, currently **1.0.0**) is meant to **match the Blender Lab MCPB / `blender_mcp` release of the same number**.  
+> Example: plugin **1.0.0** installs the MCP server from Lab’s git tag **`v1.0.0`** (package under `mcp/`), aligned with  
 > **[https://projects.blender.org/lab/blender_mcp/releases](https://projects.blender.org/lab/blender_mcp/releases)**  
-> After a Lab release, the next cold start of the server may pull a newer revision (uv cache). Keep your **Blender MCP add-on** in sync with Lab’s published add-on for that release so client and server stay compatible. This Grok plugin wrapper’s own version (see `.grok-plugin/plugin.json`) is independent of those MCPB numbers.
+> and with MCP add-on **1.0.0** in Blender.  
+> When Lab publishes a new release (e.g. 1.1.0), this repo should bump to that version and pin `uvx` to the corresponding tag. Until then, installs stay on the pinned release and do **not** silently track `main`.
 
 ## What you get
 
@@ -97,7 +99,7 @@ Leave Blender open with the add-on enabled while you use Grok. The MCP process t
 |-----------|---------|
 | Blender | **5.1.2** |
 | MCP add-on (Blender Lab) | **1.0.0** |
-| Grok plugin MCP | `uvx` from [lab/blender_mcp](https://projects.blender.org/lab/blender_mcp) (`mcp/` package; unpinned — see disclaimer / [releases](https://projects.blender.org/lab/blender_mcp/releases)) |
+| Grok plugin / MCPB | **1.0.0** — `uvx` pin `@v1.0.0` from [lab/blender_mcp](https://projects.blender.org/lab/blender_mcp/releases) |
 
 ---
 
@@ -121,8 +123,8 @@ You can keep any local `mcp-bundles` checkout as a backup; the plugin does not u
 ## First-run notes
 
 - The first launch runs  
-  `uvx --from 'git+https://projects.blender.org/lab/blender_mcp.git#subdirectory=mcp' blender-mcp`  
-  which clones the monorepo, builds the `mcp/` package, and installs dependencies. That can exceed the default MCP startup timeout.
+  `uvx --from 'git+https://projects.blender.org/lab/blender_mcp.git@v1.0.0#subdirectory=mcp' blender-mcp`  
+  which clones the monorepo at tag **v1.0.0** (same number as this plugin), builds the `mcp/` package, and installs dependencies. That can exceed the default MCP startup timeout.
 - If the server fails to start on first use, raise the timeout, for example:
 
   ```bash
@@ -169,7 +171,7 @@ Prefer high-level MCP tools (summaries, docs search, screenshots) before free-fo
       "command": "uvx",
       "args": [
         "--from",
-        "git+https://projects.blender.org/lab/blender_mcp.git#subdirectory=mcp",
+        "git+https://projects.blender.org/lab/blender_mcp.git@v1.0.0#subdirectory=mcp",
         "blender-mcp"
       ]
     }
@@ -177,7 +179,7 @@ Prefer high-level MCP tools (summaries, docs search, screenshots) before free-fo
 }
 ```
 
-This matches the official package entrypoint (`blender-mcp`) without hard-coding machine-local paths. There is **no git ref / version pin** in `args`: the resolved package tracks Lab’s default branch and is intended to align with [published releases](https://projects.blender.org/lab/blender_mcp/releases) (MCPB and related artifacts).
+`@v1.0.0` is the Lab release tag that matches this plugin’s version **1.0.0** (MCPB 1.0.0). See [releases](https://projects.blender.org/lab/blender_mcp/releases).
 
 > **Note:** There is an unrelated PyPI project also named `blender-mcp`. This plugin intentionally installs **only** from Blender Lab’s git repository.
 

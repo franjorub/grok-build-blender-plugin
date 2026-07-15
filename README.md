@@ -21,7 +21,7 @@
 [![uv](https://img.shields.io/badge/runtime-uv_·_uvx-DE5FE9?style=for-the-badge)](https://docs.astral.sh/uv/)
 
 <p>
-  <a href="https://grok.x.ai/"><img src="assets/grok-logo.svg" alt="Grok" height="48" /></a>
+  <a href="https://grok.x.ai/"><img src="assets/grok-logo.svg" alt="Grok" height="52" /></a>
   &nbsp;&nbsp;&nbsp;&nbsp;
   <a href="https://www.blender.org/"><img src="assets/blender-logo.svg" alt="Blender" height="52" /></a>
   &nbsp;&nbsp;&nbsp;&nbsp;

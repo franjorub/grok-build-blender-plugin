@@ -80,8 +80,8 @@ You can keep any local `mcp-bundles` checkout as a backup; the plugin does not u
 ## First-run notes
 
 - The first launch runs  
-  `uvx --from git+https://projects.blender.org/lab/blender_mcp.git blender-mcp`  
-  which clones the package and installs dependencies. That can exceed the default MCP startup timeout.
+  `uvx --from 'git+https://projects.blender.org/lab/blender_mcp.git#subdirectory=mcp' blender-mcp`  
+  which clones the monorepo, builds the `mcp/` package, and installs dependencies. That can exceed the default MCP startup timeout.
 - If the server fails to start on first use, raise the timeout, for example:
 
   ```bash
@@ -122,7 +122,7 @@ Prefer high-level MCP tools (summaries, docs search, screenshots) before free-fo
       "command": "uvx",
       "args": [
         "--from",
-        "git+https://projects.blender.org/lab/blender_mcp.git",
+        "git+https://projects.blender.org/lab/blender_mcp.git#subdirectory=mcp",
         "blender-mcp"
       ]
     }

@@ -9,8 +9,6 @@
 
 <div align="center">
 
-<img src="assets/hero.svg" alt="Grok Build × Blender Lab MCP — control Blender from Grok via Model Context Protocol" width="100%" />
-
 # Grok Build × Blender MCP Plugin
 
 ### Control a **live Blender** session from **[Grok Build](https://grok.x.ai/)** using the official **[Blender Lab MCP](https://www.blender.org/lab/mcp-server/)** server
@@ -22,11 +20,13 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-22C55E?style=for-the-badge)](./LICENSE)
 [![uv](https://img.shields.io/badge/runtime-uv_·_uvx-DE5FE9?style=for-the-badge)](https://docs.astral.sh/uv/)
 
-<br />
-
-<!-- Single light-background strip: readable on GitHub light + dark themes -->
-<a href="https://grok.x.ai/"><img src="assets/brands.svg" alt="Grok · Blender · MCP" width="520" /></a>
-
+<p>
+  <a href="https://grok.x.ai/"><img src="assets/grok-logo.svg" alt="Grok" height="40" /></a>
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <a href="https://www.blender.org/"><img src="assets/blender-logo.svg" alt="Blender" height="52" /></a>
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <a href="https://modelcontextprotocol.io/"><img src="assets/mcp-mark.svg" alt="Model Context Protocol" height="52" /></a>
+</p>
 
 **One install** wires Grok Build to Blender Lab’s `blender-mcp` server + a production skill for safe `bpy` workflows.
 

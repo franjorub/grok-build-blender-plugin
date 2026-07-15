@@ -1,0 +1,19 @@
+{
+  "name": "blender",
+  "version": "1.0.0",
+  "description": "Connect Grok Build to a running Blender instance via the official Blender Lab MCP server. Inspect scenes, run bpy, search API/manual docs, and render thumbnails.",
+  "author": {
+    "name": "franjorub",
+    "url": "https://github.com/franjorub"
+  },
+  "repository": "https://github.com/franjorub/grok-build-blender-plugin",
+  "homepage": "https://www.blender.org/lab/mcp-server/",
+  "license": "MIT",
+  "keywords": [
+    "blender",
+    "mcp",
+    "3d",
+    "bpy",
+    "grok-build"
+  ]
+}

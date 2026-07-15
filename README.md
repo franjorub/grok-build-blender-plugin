@@ -303,7 +303,7 @@ grok-build-blender-plugin/
 ├── .grok-plugin/plugin.json   # Grok manifest (name, version 1.0.0)
 ├── .mcp.json                  # stdio MCP → uvx @ v1.0.0
 ├── skills/blender/SKILL.md    # Agent skill
-├── assets/                    # Logos & banner
+├── assets/                    # Brand logos
 ├── LICENSE                    # MIT (wrapper)
 └── README.md
 ```
